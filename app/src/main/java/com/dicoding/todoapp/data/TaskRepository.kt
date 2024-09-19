@@ -28,10 +28,6 @@ class TaskRepository(private val tasksDao: TaskDao) {
 
     //TODO 4 : Use FilterUtils.getFilteredQuery to create filterable query
     //TODO 5 : Build PagingData with configuration
-    fun getTasks(filter: TasksFilterType): LiveData<PagingData<Task>> {
-        throw NotImplementedError("Not yet implemented")
-    }
-
     fun getTaskById(taskId: Int): LiveData<Task> {
         return tasksDao.getTaskById(taskId)
     }

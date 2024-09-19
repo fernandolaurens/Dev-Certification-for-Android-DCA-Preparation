@@ -3,7 +3,11 @@ package com.dicoding.todoapp.data
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dicoding.todoapp.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -21,13 +25,26 @@ abstract class TaskDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: TaskDatabase? = null
 
-        fun getInstance(context: Context): TaskDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    TaskDatabase::class.java,
-                    "task.db"
-                ).build()
+        fun getInstance(context:Context): TaskDatabase {
+            return INSTANCE ?: synchronized (this) {
+                val instance = Room
+                    .databaseBuilder(
+                        context.applicationContext,
+                        TaskDatabase::class.java,
+                        "task.db"
+                    )
+                    .addCallback(object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            INSTANCE?.let { taskDatabase ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val taskDao = taskDatabase.taskDao()
+                                    fillWithStartingData(context, taskDao)
+                                }
+                            }
+                        }
+                    })
+                    .build()
                 INSTANCE = instance
                 instance
             }
