@@ -68,7 +68,7 @@ dependencies {
 
     implementation(libs.androidx.work.ktx)
     implementation(libs.androidx.preference.ktx)
-    implementation(libs.androidx.paging3.ktx)
+    implementation ("androidx.paging:paging-runtime-ktx:3.1.0-beta01")
 
     androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(libs.androidx.espresso.contrib)

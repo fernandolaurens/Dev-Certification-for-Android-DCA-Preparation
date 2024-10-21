@@ -17,7 +17,7 @@ import java.util.*
 
 class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListener {
 
-    private lateinit var addTaskVIewModel: AddTaskViewModel
+    private lateinit var addTaskViewModel: AddTaskViewModel
 
     private var dueDateMillis: Long = System.currentTimeMillis()
 
@@ -28,7 +28,7 @@ class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListen
         supportActionBar?.title = getString(R.string.add_task)
 
         val factory = ViewModelFactory.getInstance(this)
-        addTaskVIewModel = ViewModelProvider(this, factory)[AddTaskViewModel::class.java]
+        addTaskViewModel = ViewModelProvider(this, factory)[AddTaskViewModel::class.java]
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,9 +48,9 @@ class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListen
                 when {
                     edTitle.isEmpty() -> false
                     edDescription.isEmpty() -> false
-                    tvDueDate == findViewById<TextView>(R.id.add_tv_due_date) -> false
+                    tvDueDate == getString(R.string.due_date) -> false
                     else -> {
-                        addTaskVIewModel.insertTask(Task(0, edTitle, edDescription, dueDateMillis))
+                        addTaskViewModel.insertTask(Task(0, edTitle, edDescription, dueDateMillis))
                         finish()
                         true
                     }
