@@ -51,10 +51,10 @@ class AddTaskActivity : AppCompatActivity(), DatePickerFragment.DialogDateListen
                     tvDueDate == findViewById<TextView>(R.id.add_tv_due_date) -> false
                     else -> {
                         addTaskVIewModel.insertTask(Task(0, edTitle, edDescription, dueDateMillis))
+                        finish()
+                        true
                     }
                 }
-
-                true
             }
             else -> super.onOptionsItemSelected(item)
         }

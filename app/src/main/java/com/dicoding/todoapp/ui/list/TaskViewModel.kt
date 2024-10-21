@@ -13,7 +13,7 @@ class TaskViewModel(private val taskRepository: TaskRepository) : ViewModel() {
 
     private val _filter = MutableLiveData<TasksFilterType>()
 
-    val tasks: LiveData<PagingData<Task>> = _filter.switchMap {
+    val tasks: LiveData<PagedList<Task>> = _filter.switchMap {
         taskRepository.getTasks(it)
     }
 

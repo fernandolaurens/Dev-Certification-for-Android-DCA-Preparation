@@ -9,11 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.paging.PagingData
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.todoapp.R
-import com.dicoding.todoapp.data.Task
 import com.dicoding.todoapp.setting.SettingsActivity
 import com.dicoding.todoapp.ui.ViewModelFactory
 import com.dicoding.todoapp.ui.add.AddTaskActivity
@@ -21,6 +21,8 @@ import com.dicoding.todoapp.utils.Event
 import com.dicoding.todoapp.utils.TasksFilterType
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.dicoding.todoapp.data.Task
+
 
 class TaskActivity : AppCompatActivity() {
 
@@ -39,19 +41,38 @@ class TaskActivity : AppCompatActivity() {
         }
 
         //TODO 6 : Initiate RecyclerView with LayoutManager, Adapter, and update database when onCheckChange
+        recycler = findViewById(R.id.rv_task)
+
+        taskAdapter = TaskAdapter { task, isCompleted ->
+            taskViewModel.completeTask(task, isCompleted)
+        }
+
+        recycler.apply {
+            layoutManager = LinearLayoutManager(this@TaskActivity)
+            adapter = taskAdapter
+        }
 
         initAction()
 
         val factory = ViewModelFactory.getInstance(this)
         taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
 
-        taskViewModel.tasks.observe(this, Observer(this::updateData))
+        taskViewModel.tasks.observe(this, Observer(this::showRecyclerView))
 
         //TODO 15 : Fixing bug : snackBar not show when task completed
+        taskViewModel.snackbarText.observe(this) {
+            showSnackBar(it)
+        }
     }
 
-    private fun updateData(task: PagingData<Task>) {
-        //TODO 7 : Submit PagingData to adapter
+//    private fun updateData(task: PagingData<Task>) {
+//        //TODO 7 : Submit PagingData to adapter
+//        taskAdapter.submitList(task)
+//    }
+
+    private fun showRecyclerView(task: PagedList<Task>) {
+        //TODO 7 : Submit pagedList to adapter and update database when onCheckChange
+        taskAdapter.submitList(task)
     }
 
     private fun showSnackBar(eventMessage: Event<Int>) {

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
+    id("org.jetbrains.kotlin.kapt")  // Correct Kapt plugin ID for Kotlin DSL
+
 }
 
 android {
@@ -60,6 +62,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.paging)
     ksp(libs.room.compiler)
+
+    kapt(libs.room.compiler)  // Fix unresolved kapt reference
+
 
     implementation(libs.androidx.work.ktx)
     implementation(libs.androidx.preference.ktx)
